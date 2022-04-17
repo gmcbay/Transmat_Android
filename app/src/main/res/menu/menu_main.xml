@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="net.mcbay.transmat.MainActivity">
+
+    <item
+        android:id="@+id/action_bluetooth"
+        android:icon="@drawable/ic_bluetooth_disconnected"
+        android:orderInCategory="100"
+        android:title="@string/bluetooth"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_change_channel"
+        android:icon="@drawable/ic_switch_channel"
+        android:orderInCategory="101"
+        android:title="@string/change_chat_channel"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings"
+        android:orderInCategory="102"
+        android:title="@string/settings"
+        app:showAsAction="ifRoom" />
+
+</menu>

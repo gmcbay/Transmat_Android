@@ -1,0 +1,21 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Transmat" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/tm_primary</item>
+        <item name="colorOnPrimary">@color/tm_light</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Theme.Transmat.NoActionBar">
+        <item name="android:windowBackground">@color/tm_dark</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/tm_primary</item>
+        <item name="colorOnPrimary">@color/tm_light</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+        <item name="actionMenuTextColor">@color/tm_light</item>
+        <item name="android:actionMenuTextColor">@color/tm_light</item>
+        <item name="android:textColorSecondary">@color/tm_light</item>
+        <item name="colorControlHighlight">@color/tm_primary_light</item>
+    </style>
+</resources>

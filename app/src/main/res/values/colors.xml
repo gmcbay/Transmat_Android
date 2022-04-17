@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tm_primary">#5816D0</color>
+    <color name="tm_primary_light">#a07fdb</color>
+    <color name="tm_dark">#FF000000</color>
+    <color name="tm_light">#FFFFFFFF</color>
+</resources>
