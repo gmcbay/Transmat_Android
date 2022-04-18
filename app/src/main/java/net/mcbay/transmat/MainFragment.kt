@@ -60,6 +60,8 @@ class MainFragment : Fragment(), CalloutAdapter.ItemClickListener {
 
         binding.calloutGrid.visibility = View.INVISIBLE
 
+        // For the purposes of this app its best if all the callout buttons fit into the
+        // given view space with no scrolling required, so make that happen
         binding.root.addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop,
                                                  oldRight, oldBottom ->
             val sizeChanged =

@@ -79,8 +79,10 @@ class MainActivity : AppCompatActivity() {
             invalidateOptionsMenu()
 
             if (!this::scanningSnackbar.isInitialized) {
-                scanningSnackbar = Snackbar.make(binding.root, R.string.bluetooth_scanning,
-                    Snackbar.LENGTH_INDEFINITE)
+                scanningSnackbar = Snackbar.make(
+                    binding.root, R.string.bluetooth_scanning,
+                    Snackbar.LENGTH_INDEFINITE
+                )
             }
 
             scanningSnackbar.show()
@@ -93,8 +95,10 @@ class MainActivity : AppCompatActivity() {
                 scanningSnackbar.dismiss()
             }
 
-            val timeoutSnackbar = Snackbar.make(binding.root, R.string.bluetooth_timeout,
-                Snackbar.LENGTH_LONG)
+            val timeoutSnackbar = Snackbar.make(
+                binding.root, R.string.bluetooth_timeout,
+                Snackbar.LENGTH_LONG
+            )
             timeoutSnackbar.show()
 
             setBluetoothIconDisconnected()
@@ -168,6 +172,19 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_bluetooth -> {
                 toggleBluetooth()
+                true
+            }
+            R.id.action_change_channel -> {
+                if (bluetoothUtil.isDeviceConnected()) {
+                    // Send an empty string, this will signal the receiver to change chat channels
+                    bluetoothUtil.send("")
+                } else {
+                    val infoSnackbar = Snackbar.make(
+                        binding.root, R.string.bluetooth_not_connected,
+                        Snackbar.LENGTH_LONG
+                    )
+                    infoSnackbar.show()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
