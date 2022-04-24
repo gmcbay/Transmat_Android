@@ -4,10 +4,18 @@
     <string name="change_chat_channel">Change Chat Channel</string>
     <string name="edit_callout_pages">Edit Callout Pages</string>
     <string name="add_new_callout_page">Add New Callout Page</string>
+    <string name="add_callout">Add Callout</string>
     <string name="callout_image">Callout Image</string>
     <string name="delete_callout_page">Delete Callout Page</string>
+    <string name="delete_callout">Delete Callout</string>
     <string name="callout_page_name_template">Callouts %1$d</string>
+    <string name="callout_template">Callout %1$d</string>
     <string name="callout_page_name">Callout Page Name:</string>
+    <string name="callout_display_label">Callout Display Label</string>
+    <string name="callout_made">Callout Made:</string>
+    <string name="color">Color</string>
+    <string name="image_photo">Image/Photo</string>
+    <string name="built_in">Built-In</string>
 
     <string name="connected_to">Connected to %1$s</string>
     <string name="bluetooth_not_connected">Feather Bluetooth Device is not connected…</string>

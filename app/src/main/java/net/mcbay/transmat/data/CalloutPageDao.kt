@@ -22,8 +22,8 @@ interface CalloutPageDao {
     suspend fun delete(pageId: Long)
 
     @Query("SELECT id FROM calloutpage ORDER BY id DESC LIMIT 1")
-    suspend fun getMaxId(): Long
+    suspend fun getMaxId(): Long?
 
     @Query("SELECT displayOrder FROM calloutpage ORDER BY displayOrder DESC LIMIT 1")
-    suspend fun getMaxDisplayOrder(): Long
+    suspend fun getMaxDisplayOrder(): Long?
 }

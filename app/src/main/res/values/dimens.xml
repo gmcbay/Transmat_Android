@@ -1,7 +1,9 @@
 <resources>
     <dimen name="callout_margin">8dp</dimen>
+    <dimen name="callout_margin_xlarge">32dp</dimen>
     <dimen name="callout_page_margin">2dp</dimen>
     <dimen name="callout_page_radio_button_margin">8dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="text_size">14sp</dimen>
+    <dimen name="min_text_size">8sp</dimen>
 </resources>

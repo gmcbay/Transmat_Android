@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import net.mcbay.transmat.data.CalloutDatabase
-import net.mcbay.transmat.data.InitialData
+import net.mcbay.transmat.data.DataInitializer
 
 class TransmatApplication : Application() {
     companion object {
@@ -30,7 +30,7 @@ class TransmatApplication : Application() {
             CalloutDatabase::class.java, DATABASE_NAME
         ).build()
 
-        InitialData.populateIfEmpty(database, this)
+        DataInitializer.populateIfEmpty(database, this)
     }
 
     fun setCurrentActivity(activity: AppCompatActivity) {

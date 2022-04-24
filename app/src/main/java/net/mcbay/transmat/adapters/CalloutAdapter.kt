@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import net.mcbay.transmat.CalloutItemViewModel
 import net.mcbay.transmat.MainActivity
 import net.mcbay.transmat.data.CalloutData
+import net.mcbay.transmat.data.CalloutDisplayType
 import net.mcbay.transmat.databinding.CalloutItemBinding
 
 class CalloutAdapter internal constructor(
@@ -46,15 +47,18 @@ class CalloutAdapter internal constructor(
         context?.let { ctx ->
             with(holder.binding) {
                 calloutName.text = data[position].label
-                calloutImage.setImageDrawable(
-                    AppCompatResources.getDrawable(
-                        ctx,
-                        ctx.resources.getIdentifier(
-                            data[position].data,
-                            "drawable", ctx.packageName
+
+                if (data[position].type == CalloutDisplayType.DRAWABLE) {
+                    calloutImage.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            ctx,
+                            ctx.resources.getIdentifier(
+                                data[position].data,
+                                "drawable", ctx.packageName
+                            )
                         )
                     )
-                )
+                }
             }
         }
     }

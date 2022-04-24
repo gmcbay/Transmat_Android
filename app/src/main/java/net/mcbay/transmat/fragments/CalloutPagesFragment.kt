@@ -90,11 +90,11 @@ class CalloutPagesFragment : DataFragment() {
         val dbJob = CoroutineScope(Dispatchers.IO).launch {
             val database = TransmatApplication.INSTANCE.getDatabase()
 
-            val nextId = database.calloutPageDao().getMaxId() + 1
+            val nextDisplayOrder = (database.calloutPageDao().getMaxDisplayOrder() ?: 0L) + 1
 
             val calloutPage = CalloutPage(
-                name = activity?.getString(R.string.callout_page_name_template, nextId),
-                displayOrder = nextId
+                name = activity?.getString(R.string.callout_page_name_template, nextDisplayOrder),
+                displayOrder = nextDisplayOrder
             )
 
             database.calloutPageDao().insertPage(calloutPage)

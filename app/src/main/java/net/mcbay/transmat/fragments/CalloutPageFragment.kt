@@ -1,11 +1,9 @@
 package net.mcbay.transmat.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.TextView.OnEditorActionListener
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,13 +13,13 @@ import net.mcbay.transmat.TransmatApplication
 import net.mcbay.transmat.adapters.AdapterClickListener
 import net.mcbay.transmat.adapters.CalloutPageAdapter
 import net.mcbay.transmat.data.CalloutData
+import net.mcbay.transmat.data.CalloutDisplayType
 import net.mcbay.transmat.databinding.FragmentCalloutPageBinding
-
 
 class CalloutPageFragment : DataFragment() {
     private var fragBinding: FragmentCalloutPageBinding? = null
     private val binding get() = fragBinding!!
-    private var pageId = 1L
+    private var pageId = TransmatApplication.DEFAULT_PAGE_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,50 +35,27 @@ class CalloutPageFragment : DataFragment() {
         (fragBinding as FragmentCalloutPageBinding).lifecycleOwner = this
         updateView()
 
-        binding.pageName.setOnEditorActionListener(OnEditorActionListener { v, actionId, _ ->
-            when (actionId) {
-                EditorInfo.IME_ACTION_DONE,
-                EditorInfo.IME_ACTION_NEXT,
-                EditorInfo.IME_ACTION_PREVIOUS -> {
-                    val imm: InputMethodManager = v.context
-                        .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(v.windowToken, 0)
-                    writePageNameToDatabase()
-                    return@OnEditorActionListener true
-                }
-            }
-            false
-        })
+        var previousPageName: String? = null
 
-        binding.pageName.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) {
-                writePageNameToDatabase()
+        initEditText(binding.pageName) {
+            val pageName = binding.pageName.text.toString()
+
+            if (previousPageName != pageName) {
+                val dbJob = CoroutineScope(Dispatchers.IO).launch {
+                    TransmatApplication.INSTANCE.getDatabase().calloutPageDao().setName(
+                        pageId,
+                        pageName
+                    )
+                }
+
+                dbJob.invokeOnCompletion {
+                    previousPageName = pageName
+                    onDatabaseUpdate()
+                }
             }
         }
 
         return binding.root
-    }
-
-    // Avoid repeat writes in instances where multiple different events off the input
-    // EditText that cause writePageNameToDatabase to be called might get thrown at once
-    private var previousPageName: String? = null
-
-    private fun writePageNameToDatabase() {
-        val pageName = binding.pageName.text.toString()
-
-        if (previousPageName != pageName) {
-            val dbJob = CoroutineScope(Dispatchers.IO).launch {
-                TransmatApplication.INSTANCE.getDatabase().calloutPageDao().setName(
-                    pageId,
-                    pageName
-                )
-            }
-
-            dbJob.invokeOnCompletion {
-                previousPageName = pageName
-                onDatabaseUpdate()
-            }
-        }
     }
 
     override fun updateView(scrollToEnd: Boolean) {
@@ -106,7 +81,13 @@ class CalloutPageFragment : DataFragment() {
                         list.adapter = calloutPageAdapter
                         calloutPageAdapter.setClickListener(object : AdapterClickListener {
                             override fun onItemClick(view: View?, position: Int) {
+                                val args = bundleOf(
+                                    "calloutId" to calloutPageAdapter.getCallout(
+                                        position
+                                    ).id
+                                )
 
+                                findNavController().navigate(R.id.to_CalloutEditFragment, args)
                             }
                         })
 
@@ -129,6 +110,10 @@ class CalloutPageFragment : DataFragment() {
                 deleteCalloutPage()
                 true
             }
+            R.id.action_add_callout -> {
+                addCallout()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -137,6 +122,30 @@ class CalloutPageFragment : DataFragment() {
         menu.findItem(R.id.action_delete_callout_page).isVisible =
             (pageId != TransmatApplication.DEFAULT_PAGE_ID)
         super.onPrepareOptionsMenu(menu)
+    }
+
+    private fun addCallout() {
+        val dbJob = CoroutineScope(Dispatchers.IO).launch {
+            val database = TransmatApplication.INSTANCE.getDatabase()
+            val nextDisplayOrder = (database.calloutDataDao().getMaxDisplayOrder(pageId) ?: 0L) + 1
+            val label = context?.getString(R.string.callout_template, nextDisplayOrder) ?: ""
+            val color = context?.getColor(R.color.tm_primary) ?: 0
+
+            val data = CalloutData(
+                pageId = pageId,
+                displayOrder = nextDisplayOrder,
+                label = label,
+                callout = label,
+                type = CalloutDisplayType.COLOR,
+                data = String.format("#%06X", 0xFFFFFF and color)
+            )
+
+            database.calloutDataDao().insertData(data)
+        }
+
+        dbJob.invokeOnCompletion {
+            onDatabaseUpdate()
+        }
     }
 
     private fun deleteCalloutPage() {

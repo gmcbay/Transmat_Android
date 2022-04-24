@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import net.mcbay.transmat.R
 import net.mcbay.transmat.TransmatApplication
 
-object InitialData {
+object DataInitializer {
     // Programmatically populate Vow of the Disciple callouts so the app
     // always has some callout list to use as a default.  Do this here with code rather than
     // using a pre-populated sqllite file so we can (eventually) take advantage of Android string

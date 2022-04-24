@@ -19,17 +19,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/CalloutPageFragment"
-        android:name="net.mcbay.transmat.fragments.CalloutPageFragment"
-        tools:layout="@layout/fragment_callout_page">
-
-        <argument
-            android:name="calloutPageId"
-            android:defaultValue="1L"
-            app:argType="long" />
-    </fragment>
-
-    <fragment
         android:id="@+id/CalloutPagesFragment"
         android:name="net.mcbay.transmat.fragments.CalloutPagesFragment"
         tools:layout="@layout/fragment_callout_pages">
@@ -40,5 +29,34 @@
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popUpTo="@id/CalloutPageFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/CalloutPageFragment"
+        android:name="net.mcbay.transmat.fragments.CalloutPageFragment"
+        tools:layout="@layout/fragment_callout_page">
+
+        <argument
+            android:name="calloutPageId"
+            android:defaultValue="1L"
+            app:argType="long" />
+
+        <action
+            android:id="@+id/to_CalloutEditFragment"
+            app:destination="@id/CalloutEditFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/CalloutPageFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/CalloutEditFragment"
+        android:name="net.mcbay.transmat.fragments.CalloutEditFragment"
+        tools:layout="@layout/fragment_callout_edit">
+
+        <argument
+            android:name="calloutId"
+            android:defaultValue="-1L"
+            app:argType="long" />
     </fragment>
 </navigation>
