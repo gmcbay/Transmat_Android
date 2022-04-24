@@ -7,10 +7,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.mcbay.transmat.R
+import net.mcbay.transmat.TransmatApplication
 
 object InitialData {
-    const val DATABASE_INITIALIZED = "DATABASE_INITIALIZED"
-
     // Programmatically populate Vow of the Disciple callouts so the app
     // always has some callout list to use as a default.  Do this here with code rather than
     // using a pre-populated sqllite file so we can (eventually) take advantage of Android string
@@ -20,8 +19,10 @@ object InitialData {
             val data = database.calloutDataDao().getPage(1)
 
             if (data.isEmpty()) {
-                val calloutPage = CalloutPage(name = ctx.getString(R.string.vow_of_the_disciple),
-                    displayOrder = 1)
+                val calloutPage = CalloutPage(
+                    name = ctx.getString(R.string.vow_of_the_disciple),
+                    displayOrder = 1
+                )
                 val id = database.calloutPageDao().insertPage(calloutPage)
                 val dataDao = database.calloutDataDao()
                 var displayOrder: Long = 1
@@ -326,7 +327,8 @@ object InitialData {
         }
 
         dbJob.invokeOnCompletion {
-            LocalBroadcastManager.getInstance(ctx).sendBroadcast(Intent(DATABASE_INITIALIZED))
+            LocalBroadcastManager.getInstance(ctx)
+                .sendBroadcast(Intent(TransmatApplication.DATABASE_INITIALIZED))
         }
     }
 }

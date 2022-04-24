@@ -3,7 +3,6 @@ package net.mcbay.transmat.fragments
 import android.os.Bundle
 import android.view.*
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +15,7 @@ import net.mcbay.transmat.adapters.CalloutPagesAdapter
 import net.mcbay.transmat.data.CalloutPage
 import net.mcbay.transmat.databinding.FragmentCalloutPagesBinding
 
-class CalloutPagesFragment : Fragment() {
+class CalloutPagesFragment : DataFragment() {
     private var fragBinding: FragmentCalloutPagesBinding? = null
     private val binding get() = fragBinding!!
     private var calloutPagesAdapter: CalloutPagesAdapter? = null
@@ -36,7 +35,9 @@ class CalloutPagesFragment : Fragment() {
         return binding.root
     }
 
-    private fun updateView(scrollToEnd: Boolean = false) {
+    override fun updateView(scrollToEnd: Boolean) {
+        super.updateView(scrollToEnd)
+
         var data: List<CalloutPage>? = null
 
         val dbJob = CoroutineScope(Dispatchers.IO).launch {
@@ -55,7 +56,8 @@ class CalloutPagesFragment : Fragment() {
                                 val args = bundleOf(
                                     "calloutPageId" to calloutPagesAdapter?.getCalloutPage(
                                         position
-                                    )?.id)
+                                    )?.id
+                                )
 
                                 findNavController().navigate(R.id.to_CalloutPageFragment, args)
                             }
@@ -99,7 +101,7 @@ class CalloutPagesFragment : Fragment() {
         }
 
         dbJob.invokeOnCompletion {
-            updateView(true)
+            onDatabaseUpdate()
         }
     }
 }

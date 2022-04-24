@@ -9,6 +9,12 @@ interface CalloutPageDao {
     @Query("SELECT * FROM calloutpage ORDER BY id ASC")
     suspend fun getAll(): List<CalloutPage>
 
+    @Query("SELECT name FROM calloutpage WHERE id = :pageId")
+    suspend fun getName(pageId: Long): String
+
+    @Query("UPDATE calloutpage SET name = :name WHERE id = :pageId")
+    suspend fun setName(pageId: Long, name: String)
+
     @Insert
     suspend fun insertPage(calloutPage: CalloutPage): Long
 

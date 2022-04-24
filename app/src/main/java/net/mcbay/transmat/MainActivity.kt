@@ -19,6 +19,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.snackbar.Snackbar
 import net.mcbay.transmat.databinding.ActivityMainBinding
+import net.mcbay.transmat.fragments.DataFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -127,6 +128,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        TransmatApplication.INSTANCE.setCurrentActivity(this)
         hideSystemUI()
     }
 
@@ -223,6 +225,20 @@ class MainActivity : AppCompatActivity() {
                         getString(R.string.bluetooth_permissions_required)
                     )
                 }
+            }
+        }
+    }
+
+    fun onDatabaseUpdate(scrollToEnd: Boolean = false) {
+        val navHostFragment = supportFragmentManager.findFragmentById(
+            R.id.nav_host_fragment_content_main
+        )
+
+        navHostFragment?.let { navHostFrag ->
+            val fragment = navHostFrag.childFragmentManager.fragments[0]
+
+            fragment?.let { dataFrag ->
+                (dataFrag as DataFragment).updateView(scrollToEnd)
             }
         }
     }

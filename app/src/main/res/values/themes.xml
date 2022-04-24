@@ -17,5 +17,6 @@
         <item name="android:actionMenuTextColor">@color/tm_light</item>
         <item name="android:textColorSecondary">@color/tm_light</item>
         <item name="colorControlHighlight">@color/tm_primary_light</item>
+        <item name="colorControlActivated">@color/tm_primary_light</item>
     </style>
 </resources>

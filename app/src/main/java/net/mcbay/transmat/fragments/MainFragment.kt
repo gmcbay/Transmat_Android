@@ -19,7 +19,6 @@ import net.mcbay.transmat.*
 import net.mcbay.transmat.adapters.AdapterClickListener
 import net.mcbay.transmat.adapters.CalloutAdapter
 import net.mcbay.transmat.data.CalloutData
-import net.mcbay.transmat.data.InitialData
 import net.mcbay.transmat.databinding.FragmentMainBinding
 import kotlin.math.ceil
 
@@ -40,7 +39,7 @@ class MainFragment : Fragment(), AdapterClickListener {
         activity?.let {
             LocalBroadcastManager.getInstance(it).registerReceiver(
                 dbInitializedReceiver,
-                IntentFilter(InitialData.DATABASE_INITIALIZED)
+                IntentFilter(TransmatApplication.DATABASE_INITIALIZED)
             )
         }
     }

@@ -7,6 +7,8 @@
     <string name="callout_image">Callout Image</string>
     <string name="delete_callout_page">Delete Callout Page</string>
     <string name="callout_page_name_template">Callouts %1$d</string>
+    <string name="callout_page_name">Callout Page Name:</string>
+
     <string name="connected_to">Connected to %1$s</string>
     <string name="bluetooth_not_connected">Feather Bluetooth Device is not connected…</string>
     <string name="bluetooth_scanning">Scanning for Feather Bluetooth Device…</string>

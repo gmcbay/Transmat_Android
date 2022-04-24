@@ -1,13 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.recyclerview.widget.RecyclerView xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/list"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginVertical="@dimen/callout_page_margin"
-        app:layoutManager="LinearLayoutManager"
-        tools:context=".fragments.CalloutPagesFragment"
-        tools:listitem="@layout/callout_page_item" />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/page_name_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/callout_margin"
+            android:labelFor="@id/page_name"
+            android:text="@string/callout_page_name"
+            android:textColor="@color/tm_light"
+            android:textSize="@dimen/text_size"
+            app:layout_constraintBottom_toBottomOf="@id/page_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/page_name" />
+
+        <EditText
+            android:id="@+id/page_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/callout_margin"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="@color/tm_light"
+            android:textSize="@dimen/text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/page_name_label"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginVertical="@dimen/callout_page_margin"
+            app:layoutManager="LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/page_name"
+            tools:context=".fragments.CalloutPagesFragment"
+            tools:listitem="@layout/callout_page_item" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
