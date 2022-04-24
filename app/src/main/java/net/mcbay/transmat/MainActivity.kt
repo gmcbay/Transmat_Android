@@ -8,10 +8,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -25,9 +23,7 @@ import net.mcbay.transmat.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private lateinit var bluetoothUtil: BluetoothUtil
     private lateinit var scanningSnackbar: Snackbar
-    private var actionMenu: Menu? = null
 
     private val requestMultiplePermissions =
         registerForActivityResult(
@@ -42,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (count < 2) {
-                bluetoothUtil.showBluetoothStatus(
+                TransmatApplication.INSTANCE.getBluetoothUtil().showBluetoothStatus(
                     binding.root,
                     getString(R.string.bluetooth_permissions_required)
                 )
@@ -55,27 +51,21 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            if (!bluetoothUtil.isDeviceConnected()) {
-                bluetoothUtil.scanDevices(this, binding.root)
+            if (!TransmatApplication.INSTANCE.getBluetoothUtil().isDeviceConnected()) {
+                TransmatApplication.INSTANCE.getBluetoothUtil().scanDevices(this, binding.root)
             }
         } else {
-            bluetoothUtil.showBluetoothStatus(
+            TransmatApplication.INSTANCE.getBluetoothUtil().showBluetoothStatus(
                 binding.root,
                 getString(R.string.bluetooth_required)
             )
         }
     }
 
-    fun getBluetoothUtil(): BluetoothUtil {
-        return bluetoothUtil
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        bluetoothUtil = BluetoothUtil()
-
-        bluetoothUtil.onScanning = {
+        TransmatApplication.INSTANCE.getBluetoothUtil().onScanning = {
             invalidateOptionsMenu()
 
             if (!this::scanningSnackbar.isInitialized) {
@@ -88,7 +78,7 @@ class MainActivity : AppCompatActivity() {
             scanningSnackbar.show()
         }
 
-        bluetoothUtil.onScanTimeout = {
+        TransmatApplication.INSTANCE.getBluetoothUtil().onScanTimeout = {
             invalidateOptionsMenu()
 
             if (this::scanningSnackbar.isInitialized) {
@@ -100,34 +90,28 @@ class MainActivity : AppCompatActivity() {
                 Snackbar.LENGTH_LONG
             )
             timeoutSnackbar.show()
-
-            setBluetoothIconDisconnected()
         }
 
-        bluetoothUtil.onConnected = { address ->
+        TransmatApplication.INSTANCE.getBluetoothUtil().onConnected = { address ->
             invalidateOptionsMenu()
 
             if (this::scanningSnackbar.isInitialized) {
                 scanningSnackbar.dismiss()
             }
 
-            setBluetoothIconConnected()
-
-            bluetoothUtil.showBluetoothStatus(
+            TransmatApplication.INSTANCE.getBluetoothUtil().showBluetoothStatus(
                 binding.root, getString(R.string.connected_to, address)
             )
         }
 
-        bluetoothUtil.onDisconnected = {
+        TransmatApplication.INSTANCE.getBluetoothUtil().onDisconnected = {
             invalidateOptionsMenu()
 
             if (this::scanningSnackbar.isInitialized) {
                 scanningSnackbar.dismiss()
             }
 
-            setBluetoothIconDisconnected()
-
-            bluetoothUtil.showBluetoothStatus(
+            TransmatApplication.INSTANCE.getBluetoothUtil().showBluetoothStatus(
                 binding.root, getString(R.string.bluetooth_disconnected)
             )
         }
@@ -139,14 +123,6 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
-    }
-
-    private fun setBluetoothIconConnected() {
-
-    }
-
-    private fun setBluetoothIconDisconnected() {
-
     }
 
     override fun onResume() {
@@ -163,32 +139,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        actionMenu = menu
-        menuInflater.inflate(R.menu.menu_main, menu)
+        menuInflater.inflate(R.menu.menu_app, menu)
         return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_bluetooth -> {
-                toggleBluetooth()
-                true
-            }
-            R.id.action_change_channel -> {
-                if (bluetoothUtil.isDeviceConnected()) {
-                    // Send an empty string, this will signal the receiver to change chat channels
-                    bluetoothUtil.send("")
-                } else {
-                    val infoSnackbar = Snackbar.make(
-                        binding.root, R.string.bluetooth_not_connected,
-                        Snackbar.LENGTH_LONG
-                    )
-                    infoSnackbar.show()
-                }
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -202,7 +154,9 @@ class MainActivity : AppCompatActivity() {
         requestBluetooth.launch(enableBtIntent)
     }
 
-    private fun toggleBluetooth() {
+    fun toggleBluetooth() {
+        val bluetoothUtil = TransmatApplication.INSTANCE.getBluetoothUtil()
+
         val bluetoothManager: BluetoothManager = getSystemService(
             BluetoothManager::class.java
         )
@@ -259,6 +213,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
+                val bluetoothUtil = TransmatApplication.INSTANCE.getBluetoothUtil()
+
                 if (allowed) {
                     bluetoothUtil.startScan(this, binding.root)
                 } else {
@@ -269,23 +225,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        if (bluetoothUtil.isDeviceConnected()) {
-            actionMenu?.getItem(0)?.icon = ContextCompat.getDrawable(
-                this,
-                R.drawable.ic_bluetooth_connected
-            )
-            CalloutItemViewModel.getInstance().setConnected(true)
-        } else {
-            actionMenu?.getItem(0)?.icon = ContextCompat.getDrawable(
-                this,
-                R.drawable.ic_bluetooth_disconnected
-            )
-            CalloutItemViewModel.getInstance().setConnected(false)
-        }
-
-        return super.onPrepareOptionsMenu(menu)
     }
 }

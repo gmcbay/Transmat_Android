@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/callout_page_margin"
+        android:background="@color/calloutpage_dark_background"
+        android:foreground="?attr/selectableItemBackground">
+
+        <!-- Do a bit of jiggery-pokery with padding and the button drawable to get a spacious
+             radio button area to reduce chances that clicks intended on the radio button
+             will act as clicks on the callout page item overall -->
+        <RadioButton
+            android:id="@+id/radio_button"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/callout_page_radio_button_margin"
+            android:button="@null"
+            android:buttonTint="@color/tm_primary_light"
+            android:drawableRight="?android:attr/listChoiceIndicatorSingle"
+            android:drawableTint="@color/tm_primary_light"
+            android:paddingRight="16dp"
+            android:paddingLeft="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlHardcoded" />
+
+        <TextView
+            android:id="@+id/page_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/tm_light"
+            android:textSize="@dimen/text_size"
+            app:layout_constraintBottom_toBottomOf="@id/radio_button"
+            app:layout_constraintStart_toEndOf="@id/radio_button"
+            app:layout_constraintTop_toTopOf="@id/radio_button" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

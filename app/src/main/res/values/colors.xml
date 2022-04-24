@@ -4,4 +4,5 @@
     <color name="tm_primary_light">#a07fdb</color>
     <color name="tm_dark">#FF000000</color>
     <color name="tm_light">#FFFFFFFF</color>
+    <color name="calloutpage_dark_background">#FF424242</color>
 </resources>

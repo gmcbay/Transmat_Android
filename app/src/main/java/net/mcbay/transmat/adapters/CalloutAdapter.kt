@@ -1,4 +1,4 @@
-package net.mcbay.transmat
+package net.mcbay.transmat.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,18 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
+import net.mcbay.transmat.CalloutItemViewModel
+import net.mcbay.transmat.MainActivity
+import net.mcbay.transmat.data.CalloutData
 import net.mcbay.transmat.databinding.CalloutItemBinding
 
 class CalloutAdapter internal constructor(
     private val context: Context?,
-    private val data: Array<CalloutData>
+    private val data: List<CalloutData>
 ) :
     RecyclerView.Adapter<CalloutAdapter.ViewHolder>() {
-    private var clickListener: ItemClickListener? = null
-
-    interface ItemClickListener {
-        fun onItemClick(view: View?, position: Int)
-    }
+    private var clickListener: AdapterClickListener? = null
 
     inner class ViewHolder(val binding: CalloutItemBinding) :
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
@@ -46,11 +45,14 @@ class CalloutAdapter internal constructor(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         context?.let { ctx ->
             with(holder.binding) {
-                calloutText.text = data[position].label
+                calloutName.text = data[position].label
                 calloutImage.setImageDrawable(
                     AppCompatResources.getDrawable(
                         ctx,
-                        data[position].resId
+                        ctx.resources.getIdentifier(
+                            data[position].data,
+                            "drawable", ctx.packageName
+                        )
                     )
                 )
             }
@@ -61,11 +63,11 @@ class CalloutAdapter internal constructor(
         return data.size
     }
 
-    fun getCallout(position: Int): String {
-        return data[position].callout
+    fun getCallout(position: Int): CalloutData {
+        return data[position]
     }
 
-    fun setClickListener(itemClickListener: ItemClickListener?) {
+    fun setClickListener(itemClickListener: AdapterClickListener?) {
         clickListener = itemClickListener
     }
 }

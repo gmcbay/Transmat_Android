@@ -22,20 +22,20 @@
             android:id="@+id/callout_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/callout_text"
+            app:layout_constraintBottom_toTopOf="@id/callout_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/callout_text"
+            android:id="@+id/callout_name"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
             android:textColor="@color/tm_light"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

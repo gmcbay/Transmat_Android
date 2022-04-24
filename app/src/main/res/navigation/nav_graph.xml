@@ -7,8 +7,38 @@
 
     <fragment
         android:id="@+id/MainFragment"
-        android:name="net.mcbay.transmat.MainFragment"
+        android:name="net.mcbay.transmat.fragments.MainFragment"
         tools:layout="@layout/fragment_main">
 
+        <action
+            android:id="@+id/to_CalloutPagesFragment"
+            app:destination="@id/CalloutPagesFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/MainFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/CalloutPageFragment"
+        android:name="net.mcbay.transmat.fragments.CalloutPageFragment"
+        tools:layout="@layout/fragment_callout_page">
+
+        <argument
+            android:name="calloutPageId"
+            android:defaultValue="1L"
+            app:argType="long" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/CalloutPagesFragment"
+        android:name="net.mcbay.transmat.fragments.CalloutPagesFragment"
+        tools:layout="@layout/fragment_callout_pages">
+
+        <action
+            android:id="@+id/to_CalloutPageFragment"
+            app:destination="@id/CalloutPageFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/CalloutPageFragment" />
     </fragment>
 </navigation>

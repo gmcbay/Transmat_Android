@@ -2,7 +2,11 @@
     <string name="app_name">Transmat</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="change_chat_channel">Change Chat Channel</string>
-    <string name="settings">Settings</string>
+    <string name="edit_callout_pages">Edit Callout Pages</string>
+    <string name="add_new_callout_page">Add New Callout Page</string>
+    <string name="callout_image">Callout Image</string>
+    <string name="delete_callout_page">Delete Callout Page</string>
+    <string name="callout_page_name_template">Callouts %1$d</string>
     <string name="connected_to">Connected to %1$s</string>
     <string name="bluetooth_not_connected">Feather Bluetooth Device is not connected…</string>
     <string name="bluetooth_scanning">Scanning for Feather Bluetooth Device…</string>
@@ -11,4 +15,34 @@
     <string name="bluetooth_unsupported">Bluetooth unsupported on Android device.</string>
     <string name="bluetooth_required">Bluetooth must be turned on for app to function.</string>
     <string name="bluetooth_permissions_required">Bluetooth permissions must be granted to the app.</string>
+
+    <string name="vow_of_the_disciple">Vow of the Disciple</string>
+    <string name="next">Next</string>
+    <string name="next_separator">----------</string>
+    <string name="ascendant_plane">Ascendant Plane</string>
+    <string name="black_garden">Black Garden</string>
+    <string name="black_heart">Black Heart</string>
+    <string name="commune">Commune</string>
+    <string name="darkness">Darkness</string>
+    <string name="drink">Drink</string>
+    <string name="earth">Earth</string>
+    <string name="enter">Enter</string>
+    <string name="fleet">Fleet</string>
+    <string name="give">Give</string>
+    <string name="grieve">Grieve</string>
+    <string name="guardian">Guardian</string>
+    <string name="hive">Hive</string>
+    <string name="kill">Kill</string>
+    <string name="knowledge">Knowledge</string>
+    <string name="light">Light</string>
+    <string name="love">Love</string>
+    <string name="pyramid">Pyramid</string>
+    <string name="savathun">Savathun</string>
+    <string name="scorn">Scorn</string>
+    <string name="stop">Stop</string>
+    <string name="tower">Tower</string>
+    <string name="traveler">Traveler</string>
+    <string name="witness">Witness</string>
+    <string name="worm">Worm</string>
+    <string name="worship">Worship</string>
 </resources>

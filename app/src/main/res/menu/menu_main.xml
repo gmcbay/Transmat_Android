@@ -18,10 +18,10 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/ic_settings"
+        android:id="@+id/action_edit_callout_pages"
+        android:icon="@drawable/ic_edit_callout_pages"
         android:orderInCategory="102"
-        android:title="@string/settings"
+        android:title="@string/edit_callout_pages"
         app:showAsAction="ifRoom" />
 
 </menu>

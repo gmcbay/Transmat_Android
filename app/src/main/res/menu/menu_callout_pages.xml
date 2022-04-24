@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="net.mcbay.transmat.MainActivity">
+
+    <item
+        android:id="@+id/action_add_new_callout_page"
+        android:icon="@drawable/ic_add_callout_page"
+        android:orderInCategory="100"
+        android:title="@string/add_new_callout_page"
+        app:showAsAction="ifRoom" />
+
+</menu>
