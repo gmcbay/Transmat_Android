@@ -8,7 +8,10 @@ import kotlinx.coroutines.launch
 import net.mcbay.transmat.R
 import net.mcbay.transmat.TransmatApplication
 import net.mcbay.transmat.data.CalloutData
+import net.mcbay.transmat.data.CalloutDisplayType
 import net.mcbay.transmat.databinding.FragmentCalloutEditBinding
+import net.mcbay.transmat.drawFrom
+import top.defaults.colorpicker.ColorPickerPopup
 
 class CalloutEditFragment : DataFragment() {
     private var fragBinding: FragmentCalloutEditBinding? = null
@@ -36,7 +39,7 @@ class CalloutEditFragment : DataFragment() {
             initEditText(calloutLabel) {
                 val label = calloutLabel.text.toString()
 
-                if (previousLabel != label) {
+                if (previousLabel?.equals(label) == true) {
                     val dbJob = CoroutineScope(Dispatchers.IO).launch {
                         TransmatApplication.INSTANCE.getDatabase().calloutDataDao().setLabel(
                             calloutId, label
@@ -87,6 +90,33 @@ class CalloutEditFragment : DataFragment() {
                     with(binding) {
                         calloutLabel.setText(calloutData.label)
                         calloutMade.setText(calloutData.callout)
+                        val currentColor = calloutImage.drawFrom(calloutData)
+
+                        colorButton.setOnClickListener {
+                            ColorPickerPopup.Builder(context)
+                                .initialColor(currentColor)
+                                .enableBrightness(true)
+                                .enableAlpha(false)
+                                .okTitle(context?.getString(R.string.choose))
+                                .cancelTitle(context?.getString(R.string.cancel))
+                                .showIndicator(true)
+                                .showValue(false)
+                                .build()
+                                .show(colorButton, object : ColorPickerPopup.ColorPickerObserver() {
+                                    override fun onColorPicked(color: Int) {
+                                        val dbColorJob = CoroutineScope(Dispatchers.IO).launch {
+                                            val dao = TransmatApplication.INSTANCE.getDatabase()
+                                                .calloutDataDao()
+                                            dao.setData(calloutId, color.toString())
+                                            dao.setType(calloutId, CalloutDisplayType.COLOR)
+                                        }
+
+                                        dbColorJob.invokeOnCompletion {
+                                            onDatabaseUpdate()
+                                        }
+                                    }
+                                })
+                        }
                     }
                 }
             }

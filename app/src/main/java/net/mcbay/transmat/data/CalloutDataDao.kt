@@ -15,6 +15,12 @@ interface CalloutDataDao {
     @Query("UPDATE calloutdata SET label = :label WHERE id = :calloutId")
     suspend fun setLabel(calloutId: Long, label: String)
 
+    @Query("UPDATE calloutdata SET data = :data WHERE id = :calloutId")
+    suspend fun setData(calloutId: Long, data: String)
+
+    @Query("UPDATE calloutdata SET type = :type WHERE id = :calloutId")
+    suspend fun setType(calloutId: Long, type: CalloutDisplayType)
+
     @Query("UPDATE calloutdata SET callout = :callout WHERE id = :calloutId")
     suspend fun setCallout(calloutId: Long, callout: String)
 

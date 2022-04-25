@@ -10,8 +10,8 @@
         android:background="@color/calloutpage_dark_background"
         android:foreground="?attr/selectableItemBackground">
 
-        <ImageView
-            android:id="@+id/image"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/callout_image"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_margin="@dimen/callout_page_radio_button_margin"
@@ -29,9 +29,9 @@
             android:textAppearance="?attr/textAppearanceListItem"
             android:textColor="@color/tm_light"
             android:textSize="@dimen/text_size"
-            app:layout_constraintBottom_toBottomOf="@id/image"
-            app:layout_constraintStart_toEndOf="@id/image"
-            app:layout_constraintTop_toTopOf="@id/image" />
+            app:layout_constraintBottom_toBottomOf="@id/callout_image"
+            app:layout_constraintStart_toEndOf="@id/callout_image"
+            app:layout_constraintTop_toTopOf="@id/callout_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

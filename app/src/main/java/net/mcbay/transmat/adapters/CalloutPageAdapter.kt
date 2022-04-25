@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import net.mcbay.transmat.data.CalloutData
 import net.mcbay.transmat.databinding.CalloutPageItemBinding
+import net.mcbay.transmat.drawFrom
 
 class CalloutPageAdapter internal constructor(
     private val data: List<CalloutData>
@@ -38,6 +39,7 @@ class CalloutPageAdapter internal constructor(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder.binding) {
             calloutName.text = data[position].label
+            calloutImage.drawFrom(data[position])
         }
     }
 

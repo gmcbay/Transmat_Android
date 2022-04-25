@@ -26,6 +26,9 @@
     <string name="bluetooth_required">Bluetooth must be turned on for app to function.</string>
     <string name="bluetooth_permissions_required">Bluetooth permissions must be granted to the app.</string>
 
+    <string name="choose">Choose</string>
+    <string name="cancel">Cancel</string>
+
     <string name="vow_of_the_disciple">Vow of the Disciple</string>
     <string name="next">Next</string>
     <string name="next_separator">----------</string>

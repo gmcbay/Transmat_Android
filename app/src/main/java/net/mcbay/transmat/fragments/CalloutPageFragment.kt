@@ -66,7 +66,6 @@ class CalloutPageFragment : DataFragment() {
 
         val dbJob = CoroutineScope(Dispatchers.IO).launch {
             val database = TransmatApplication.INSTANCE.getDatabase()
-
             data = database.calloutDataDao().getPage(pageId)
             name = database.calloutPageDao().getName(pageId)
         }
@@ -137,7 +136,7 @@ class CalloutPageFragment : DataFragment() {
                 label = label,
                 callout = label,
                 type = CalloutDisplayType.COLOR,
-                data = String.format("#%06X", 0xFFFFFF and color)
+                data = String.format("%06X", 0xFFFFFF and color)
             )
 
             database.calloutDataDao().insertData(data)

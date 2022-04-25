@@ -4,13 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import net.mcbay.transmat.CalloutItemViewModel
 import net.mcbay.transmat.MainActivity
 import net.mcbay.transmat.data.CalloutData
-import net.mcbay.transmat.data.CalloutDisplayType
 import net.mcbay.transmat.databinding.CalloutItemBinding
+import net.mcbay.transmat.drawFrom
 
 class CalloutAdapter internal constructor(
     private val context: Context?,
@@ -44,21 +43,10 @@ class CalloutAdapter internal constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        context?.let { ctx ->
+        context?.let {
             with(holder.binding) {
                 calloutName.text = data[position].label
-
-                if (data[position].type == CalloutDisplayType.DRAWABLE) {
-                    calloutImage.setImageDrawable(
-                        AppCompatResources.getDrawable(
-                            ctx,
-                            ctx.resources.getIdentifier(
-                                data[position].data,
-                                "drawable", ctx.packageName
-                            )
-                        )
-                    )
-                }
+                calloutImage.drawFrom(data[position])
             }
         }
     }
