@@ -19,4 +19,14 @@
         <item name="colorControlHighlight">@color/tm_primary_light</item>
         <item name="colorControlActivated">@color/tm_primary_light</item>
     </style>
+
+    <style name="TransmatAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:background">@color/tm_dark</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="windowFixedWidthMajor">90%</item>
+        <item name="windowFixedWidthMinor">90%</item>
+    </style>
 </resources>

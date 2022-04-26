@@ -26,6 +26,7 @@
     <string name="bluetooth_required">Bluetooth must be turned on for app to function.</string>
     <string name="bluetooth_permissions_required">Bluetooth permissions must be granted to the app.</string>
 
+    <string name="choose_color">Choose Color</string>
     <string name="choose">Choose</string>
     <string name="cancel">Cancel</string>
 

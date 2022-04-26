@@ -1,7 +1,12 @@
 package net.mcbay.transmat.fragments
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
+import android.widget.TextView
+import com.larswerkman.holocolorpicker.ColorPicker
+import com.larswerkman.holocolorpicker.SaturationBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -11,7 +16,7 @@ import net.mcbay.transmat.data.CalloutData
 import net.mcbay.transmat.data.CalloutDisplayType
 import net.mcbay.transmat.databinding.FragmentCalloutEditBinding
 import net.mcbay.transmat.drawFrom
-import top.defaults.colorpicker.ColorPickerPopup
+
 
 class CalloutEditFragment : DataFragment() {
     private var fragBinding: FragmentCalloutEditBinding? = null
@@ -93,29 +98,52 @@ class CalloutEditFragment : DataFragment() {
                         val currentColor = calloutImage.drawFrom(calloutData)
 
                         colorButton.setOnClickListener {
-                            ColorPickerPopup.Builder(context)
-                                .initialColor(currentColor)
-                                .enableBrightness(true)
-                                .enableAlpha(false)
-                                .okTitle(context?.getString(R.string.choose))
-                                .cancelTitle(context?.getString(R.string.cancel))
-                                .showIndicator(true)
-                                .showValue(false)
-                                .build()
-                                .show(colorButton, object : ColorPickerPopup.ColorPickerObserver() {
-                                    override fun onColorPicked(color: Int) {
-                                        val dbColorJob = CoroutineScope(Dispatchers.IO).launch {
-                                            val dao = TransmatApplication.INSTANCE.getDatabase()
-                                                .calloutDataDao()
-                                            dao.setData(calloutId, color.toString())
-                                            dao.setType(calloutId, CalloutDisplayType.COLOR)
-                                        }
+                            context?.let { ctx ->
+                                val builder = AlertDialog.Builder(ctx, R.style.TransmatAlertDialog)
+                                val view = View.inflate(
+                                    context, R.layout.dialog_color_picker,
+                                    null
+                                )
+                                val titleView = View.inflate(
+                                    context,
+                                    R.layout.dialog_color_picker_title, null
+                                )
+                                titleView.findViewById<TextView>(R.id.title).text =
+                                    ctx.getString(R.string.choose_color)
+                                builder.setView(view)
+                                builder.setCustomTitle(titleView)
+                                builder.setCancelable(false)
 
-                                        dbColorJob.invokeOnCompletion {
-                                            onDatabaseUpdate()
-                                        }
+                                val picker = view.findViewById<ColorPicker>(R.id.picker)
+                                val saturationBar = view.findViewById<SaturationBar>(
+                                    R.id.saturation_bar
+                                )
+                                picker.addSaturationBar(saturationBar)
+                                picker.setNewCenterColor(currentColor)
+                                picker.color = currentColor
+                                picker.showOldCenterColor = false
+                                val dialog = builder.create()
+
+                                view.findViewById<Button>(R.id.cancel_button).setOnClickListener {
+                                    dialog.dismiss()
+                                }
+
+                                view.findViewById<Button>(R.id.choose_button).setOnClickListener {
+                                    dialog.dismiss()
+                                    val dbColorJob = CoroutineScope(Dispatchers.IO).launch {
+                                        val dao = TransmatApplication.INSTANCE.getDatabase()
+                                            .calloutDataDao()
+                                        dao.setData(calloutId, picker.color.toString())
+                                        dao.setType(calloutId, CalloutDisplayType.COLOR)
                                     }
-                                })
+
+                                    dbColorJob.invokeOnCompletion {
+                                        onDatabaseUpdate()
+                                    }
+                                }
+
+                                dialog.show()
+                            }
                         }
                     }
                 }
