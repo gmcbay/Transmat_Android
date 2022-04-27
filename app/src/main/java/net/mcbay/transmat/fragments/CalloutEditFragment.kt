@@ -1,10 +1,15 @@
 package net.mcbay.transmat.fragments
 
 import android.app.AlertDialog
+import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
+import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.larswerkman.holocolorpicker.ColorPicker
 import com.larswerkman.holocolorpicker.SaturationBar
 import kotlinx.coroutines.CoroutineScope
@@ -12,11 +17,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.mcbay.transmat.R
 import net.mcbay.transmat.TransmatApplication
+import net.mcbay.transmat.adapters.AdapterClickListener
+import net.mcbay.transmat.adapters.BuiltinAdapter
 import net.mcbay.transmat.data.CalloutData
 import net.mcbay.transmat.data.CalloutDisplayType
+import net.mcbay.transmat.data.DataInitializer
 import net.mcbay.transmat.databinding.FragmentCalloutEditBinding
 import net.mcbay.transmat.drawFrom
-
 
 class CalloutEditFragment : DataFragment() {
     private var fragBinding: FragmentCalloutEditBinding? = null
@@ -99,56 +106,112 @@ class CalloutEditFragment : DataFragment() {
 
                         colorButton.setOnClickListener {
                             context?.let { ctx ->
-                                val builder = AlertDialog.Builder(ctx, R.style.TransmatAlertDialog)
-                                val view = View.inflate(
-                                    context, R.layout.dialog_color_picker,
-                                    null
-                                )
-                                val titleView = View.inflate(
-                                    context,
-                                    R.layout.dialog_color_picker_title, null
-                                )
-                                titleView.findViewById<TextView>(R.id.title).text =
-                                    ctx.getString(R.string.choose_color)
-                                builder.setView(view)
-                                builder.setCustomTitle(titleView)
-                                builder.setCancelable(false)
+                                showColorChooser(ctx, currentColor)
+                            }
+                        }
 
-                                val picker = view.findViewById<ColorPicker>(R.id.picker)
-                                val saturationBar = view.findViewById<SaturationBar>(
-                                    R.id.saturation_bar
-                                )
-                                picker.addSaturationBar(saturationBar)
-                                picker.setNewCenterColor(currentColor)
-                                picker.color = currentColor
-                                picker.showOldCenterColor = false
-                                val dialog = builder.create()
-
-                                view.findViewById<Button>(R.id.cancel_button).setOnClickListener {
-                                    dialog.dismiss()
-                                }
-
-                                view.findViewById<Button>(R.id.choose_button).setOnClickListener {
-                                    dialog.dismiss()
-                                    val dbColorJob = CoroutineScope(Dispatchers.IO).launch {
-                                        val dao = TransmatApplication.INSTANCE.getDatabase()
-                                            .calloutDataDao()
-                                        dao.setData(calloutId, picker.color.toString())
-                                        dao.setType(calloutId, CalloutDisplayType.COLOR)
-                                    }
-
-                                    dbColorJob.invokeOnCompletion {
-                                        onDatabaseUpdate()
-                                    }
-                                }
-
-                                dialog.show()
+                        builtInButton.setOnClickListener {
+                            context?.let { ctx ->
+                                showBuiltinChooser(ctx)
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun showBuiltinChooser(ctx: Context) {
+        val popupView = View.inflate(
+            ctx,
+            R.layout.popup_builtin_list, null
+        )
+        val popupWindow = PopupWindow(
+            popupView,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.MATCH_PARENT
+        )
+        val list = popupView.findViewById<RecyclerView>(R.id.list)
+        list.layoutManager = LinearLayoutManager(ctx)
+        val builtinList = DataInitializer.getBuiltinList(ctx)
+        val adapter = BuiltinAdapter(ctx, builtinList)
+        list.adapter = adapter
+
+        adapter.setClickListener(object : AdapterClickListener {
+            override fun onItemClick(view: View?, position: Int) {
+                popupWindow.dismiss()
+
+                val dbColorJob = CoroutineScope(Dispatchers.IO).launch {
+                    val dao = TransmatApplication.INSTANCE.getDatabase()
+                        .calloutDataDao()
+                    dao.setData(
+                        calloutId, CalloutDisplayType.DRAWABLE,
+                        builtinList[position]
+                    )
+                }
+
+                dbColorJob.invokeOnCompletion {
+                    onDatabaseUpdate()
+                }
+            }
+        })
+
+        popupView.findViewById<Button>(
+            R.id.cancel_button
+        ).setOnClickListener {
+            popupWindow.dismiss()
+        }
+        popupWindow.setBackgroundDrawable(
+            ColorDrawable(ctx.getColor(R.color.tm_dark))
+        )
+        popupWindow.isOutsideTouchable = true
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)
+    }
+
+    private fun showColorChooser(ctx: Context, currentColor: Int) {
+        val builder = AlertDialog.Builder(ctx, R.style.TransmatAlertDialog)
+        val view = View.inflate(
+            context, R.layout.dialog_color_picker,
+            null
+        )
+        val titleView = View.inflate(
+            context,
+            R.layout.dialog_color_picker_title, null
+        )
+        titleView.findViewById<TextView>(R.id.title).text =
+            ctx.getString(R.string.choose_color)
+        builder.setView(view)
+        builder.setCustomTitle(titleView)
+        builder.setCancelable(false)
+
+        val picker = view.findViewById<ColorPicker>(R.id.picker)
+        val saturationBar = view.findViewById<SaturationBar>(
+            R.id.saturation_bar
+        )
+        picker.addSaturationBar(saturationBar)
+        picker.setNewCenterColor(currentColor)
+        picker.color = currentColor
+        picker.showOldCenterColor = false
+        val dialog = builder.create()
+
+        view.findViewById<Button>(R.id.cancel_button).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        view.findViewById<Button>(R.id.choose_button).setOnClickListener {
+            dialog.dismiss()
+            val dbColorJob = CoroutineScope(Dispatchers.IO).launch {
+                val dao = TransmatApplication.INSTANCE.getDatabase()
+                    .calloutDataDao()
+                dao.setData(calloutId, CalloutDisplayType.COLOR, picker.color.toString())
+            }
+
+            dbColorJob.invokeOnCompletion {
+                onDatabaseUpdate()
+            }
+        }
+
+        dialog.show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

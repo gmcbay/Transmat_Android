@@ -331,4 +331,36 @@ object DataInitializer {
                 .sendBroadcast(Intent(TransmatApplication.DATABASE_INITIALIZED))
         }
     }
+
+    fun getBuiltinList(ctx: Context): Array<String> {
+        return arrayOf(
+            ctx.resources.getResourceName(R.drawable.next),
+            ctx.resources.getResourceName(R.drawable.ascendant_plane),
+            ctx.resources.getResourceName(R.drawable.black_garden),
+            ctx.resources.getResourceName(R.drawable.black_heart),
+            ctx.resources.getResourceName(R.drawable.commune),
+            ctx.resources.getResourceName(R.drawable.darkness),
+            ctx.resources.getResourceName(R.drawable.drink),
+            ctx.resources.getResourceName(R.drawable.earth),
+            ctx.resources.getResourceName(R.drawable.enter),
+            ctx.resources.getResourceName(R.drawable.fleet),
+            ctx.resources.getResourceName(R.drawable.give),
+            ctx.resources.getResourceName(R.drawable.grieve),
+            ctx.resources.getResourceName(R.drawable.guardian),
+            ctx.resources.getResourceName(R.drawable.hive),
+            ctx.resources.getResourceName(R.drawable.kill),
+            ctx.resources.getResourceName(R.drawable.knowledge),
+            ctx.resources.getResourceName(R.drawable.light),
+            ctx.resources.getResourceName(R.drawable.love),
+            ctx.resources.getResourceName(R.drawable.pyramid),
+            ctx.resources.getResourceName(R.drawable.savathun),
+            ctx.resources.getResourceName(R.drawable.scorn),
+            ctx.resources.getResourceName(R.drawable.stop),
+            ctx.resources.getResourceName(R.drawable.tower),
+            ctx.resources.getResourceName(R.drawable.traveler),
+            ctx.resources.getResourceName(R.drawable.witness),
+            ctx.resources.getResourceName(R.drawable.worm),
+            ctx.resources.getResourceName(R.drawable.worship)
+        )
+    }
 }

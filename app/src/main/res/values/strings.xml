@@ -17,6 +17,11 @@
     <string name="image_photo">Image/Photo</string>
     <string name="built_in">Built-In</string>
 
+    <string name="choose_color">Choose Color</string>
+    <string name="choose">Choose</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_builtin">Choose Built-In</string>
+
     <string name="connected_to">Connected to %1$s</string>
     <string name="bluetooth_not_connected">Feather Bluetooth Device is not connected…</string>
     <string name="bluetooth_scanning">Scanning for Feather Bluetooth Device…</string>
@@ -25,10 +30,6 @@
     <string name="bluetooth_unsupported">Bluetooth unsupported on Android device.</string>
     <string name="bluetooth_required">Bluetooth must be turned on for app to function.</string>
     <string name="bluetooth_permissions_required">Bluetooth permissions must be granted to the app.</string>
-
-    <string name="choose_color">Choose Color</string>
-    <string name="choose">Choose</string>
-    <string name="cancel">Cancel</string>
 
     <string name="vow_of_the_disciple">Vow of the Disciple</string>
     <string name="next">Next</string>
