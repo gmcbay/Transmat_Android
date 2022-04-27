@@ -9,7 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -18,13 +18,22 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.snackbar.Snackbar
+import com.kbeanie.multipicker.api.entity.ChosenAudio
+import com.kbeanie.multipicker.api.entity.ChosenFile
+import com.kbeanie.multipicker.api.entity.ChosenImage
+import com.kbeanie.multipicker.api.entity.ChosenVideo
+import com.noelchew.multipickerwrapper.library.MultiPickerWrapper.PickerUtilListener
+import com.noelchew.multipickerwrapper.library.ui.MultiPickerWrapperAppCompatActivity
+import com.yalantis.ucrop.UCrop
 import net.mcbay.transmat.databinding.ActivityMainBinding
 import net.mcbay.transmat.fragments.DataFragment
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : MultiPickerWrapperAppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var scanningSnackbar: Snackbar
+    private var onImagePathReturned:(path: String) -> Unit = { }
 
     private val requestMultiplePermissions =
         registerForActivityResult(
@@ -241,5 +250,50 @@ class MainActivity : AppCompatActivity() {
                 (dataFrag as DataFragment).updateView(scrollToEnd)
             }
         }
+    }
+
+    private var pickerWrapperListener: PickerUtilListener = object : PickerUtilListener {
+        override fun onPermissionDenied() {
+            Snackbar.make(
+                binding.root,
+                getString(R.string.storage_access_permission_denied),
+                Snackbar.LENGTH_LONG
+            ).show()
+        }
+
+        override fun onImagesChosen(list: List<ChosenImage>) {
+            onImagePathReturned(list[0].originalPath)
+        }
+
+        override fun onVideosChosen(list: List<ChosenVideo>) {
+
+        }
+
+        override fun onAudiosChosen(list: MutableList<ChosenAudio>?) {
+
+        }
+
+        override fun onFilesChosen(list: MutableList<ChosenFile>?) {
+
+        }
+
+        override fun onError(s: String) {
+            Snackbar.make(binding.root, s, Snackbar.LENGTH_LONG).show()
+        }
+    }
+
+    override fun getMultiPickerWrapperListener(): PickerUtilListener {
+        return pickerWrapperListener
+    }
+
+    fun pickCroppedImage(onComplete:(path: String) -> Unit) {
+        this.onImagePathReturned = onComplete
+        val options = UCrop.Options()
+        options.setToolbarTitle(getString(R.string.choose_image_crop))
+        val tmPrimaryColor = ContextCompat.getColor(this, R.color.tm_primary)
+        options.setToolbarColor(tmPrimaryColor)
+        options.setStatusBarColor(tmPrimaryColor)
+        options.setActiveWidgetColor(tmPrimaryColor)
+        multiPickerWrapper.getPermissionAndPickSingleImageAndCrop(options, 1f, 1f)
     }
 }

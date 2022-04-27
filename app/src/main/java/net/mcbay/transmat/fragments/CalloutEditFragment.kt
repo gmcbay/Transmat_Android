@@ -15,6 +15,7 @@ import com.larswerkman.holocolorpicker.SaturationBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.mcbay.transmat.MainActivity
 import net.mcbay.transmat.R
 import net.mcbay.transmat.TransmatApplication
 import net.mcbay.transmat.adapters.AdapterClickListener
@@ -107,6 +108,20 @@ class CalloutEditFragment : DataFragment() {
                         colorButton.setOnClickListener {
                             context?.let { ctx ->
                                 showColorChooser(ctx, currentColor)
+                            }
+                        }
+
+                        imageButton.setOnClickListener {
+                            (activity as MainActivity).pickCroppedImage { path ->
+                                val dbImageJob = CoroutineScope(Dispatchers.IO).launch {
+                                    val dao = TransmatApplication.INSTANCE.getDatabase()
+                                        .calloutDataDao()
+                                    dao.setData(calloutId, CalloutDisplayType.BITMAP, path)
+                                }
+
+                                dbImageJob.invokeOnCompletion {
+                                    onDatabaseUpdate()
+                                }
                             }
                         }
 

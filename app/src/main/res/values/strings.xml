@@ -21,6 +21,8 @@
     <string name="choose">Choose</string>
     <string name="cancel">Cancel</string>
     <string name="choose_builtin">Choose Built-In</string>
+    <string name="choose_image_crop">Choose Image Crop</string>
+    <string name="storage_access_permission_denied">Storage access permission denied.</string>
 
     <string name="connected_to">Connected to %1$s</string>
     <string name="bluetooth_not_connected">Feather Bluetooth Device is not connected…</string>

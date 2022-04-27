@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.room.Room
+import com.squareup.picasso.Picasso
 import net.mcbay.transmat.data.CalloutData
 import net.mcbay.transmat.data.CalloutDatabase
 import net.mcbay.transmat.data.CalloutDisplayType
 import net.mcbay.transmat.data.DataInitializer
+import java.io.File
 import java.lang.NumberFormatException
 
 class TransmatApplication : Application() {
@@ -60,27 +62,37 @@ class TransmatApplication : Application() {
 fun AppCompatImageView.drawFrom(data: CalloutData): Int {
     var currentColor = context?.getColor(R.color.tm_primary) ?: 0
 
-    if (data.type == CalloutDisplayType.COLOR) {
-        try {
-            currentColor = data.data?.toInt() ?: 0
-        } catch (nfe: NumberFormatException) {
+    when (data.type) {
+        CalloutDisplayType.COLOR -> {
+            try {
+                currentColor = data.data?.toInt() ?: 0
+            } catch (nfe: NumberFormatException) {
 
+            }
+
+            setImageDrawable(null)
+            setBackgroundColor(currentColor)
         }
-
-        setImageDrawable(null)
-        setBackgroundColor(currentColor)
-    } else if (data.type == CalloutDisplayType.DRAWABLE) {
-        setBackgroundColor(0)
-        context?.let { ctx ->
-            setImageDrawable(
-                AppCompatResources.getDrawable(
-                    ctx,
-                    ctx.resources.getIdentifier(
-                        data.data,
-                        "drawable", ctx.packageName
+        CalloutDisplayType.BITMAP -> {
+            setBackgroundColor(0)
+            data.data?.let {
+                val file = File(it)
+                Picasso.get().load(file).into(this)
+            }
+        }
+        CalloutDisplayType.DRAWABLE -> {
+            setBackgroundColor(0)
+            context?.let { ctx ->
+                setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        ctx,
+                        ctx.resources.getIdentifier(
+                            data.data,
+                            "drawable", ctx.packageName
+                        )
                     )
                 )
-            )
+            }
         }
     }
 
