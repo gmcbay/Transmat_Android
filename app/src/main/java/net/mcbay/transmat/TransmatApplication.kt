@@ -4,13 +4,16 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.content.ContextCompat
 import androidx.room.Room
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import net.mcbay.transmat.data.CalloutData
 import net.mcbay.transmat.data.CalloutDatabase
 import net.mcbay.transmat.data.CalloutDisplayType
 import net.mcbay.transmat.data.DataInitializer
 import java.io.File
+import java.lang.Exception
 import java.lang.NumberFormatException
 
 class TransmatApplication : Application() {
@@ -60,7 +63,7 @@ class TransmatApplication : Application() {
 // Extension function to draw callout icon image based on current type
 // to avoid having to duplicate this code in various different adapters
 fun AppCompatImageView.drawFrom(data: CalloutData): Int {
-    var currentColor = context?.getColor(R.color.tm_primary) ?: 0
+    var currentColor = ContextCompat.getColor(context, R.color.tm_primary)
 
     when (data.type) {
         CalloutDisplayType.COLOR -> {
@@ -76,8 +79,16 @@ fun AppCompatImageView.drawFrom(data: CalloutData): Int {
         CalloutDisplayType.BITMAP -> {
             setBackgroundColor(0)
             data.data?.let {
-                val file = File(it)
-                Picasso.get().load(file).into(this)
+                Picasso.get().load(File(it)).into(this, object : Callback {
+                    override fun onSuccess() {
+
+                    }
+
+                    override fun onError(e: Exception?) {
+                        setBackgroundColor(ContextCompat.getColor(context, R.color.tm_primary))
+                    }
+
+                })
             }
         }
         CalloutDisplayType.DRAWABLE -> {

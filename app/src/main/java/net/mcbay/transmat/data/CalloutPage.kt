@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 @Entity
 data class CalloutPage(
     @PrimaryKey(autoGenerate = true) var id: Long? = null,
-    val displayOrder: Long, // can't currently change display order in app, but planned
-    val name: String?
+    var displayOrder: Long, // can't currently change display order in app, but planned
+    var name: String?
 )

@@ -1,7 +1,9 @@
 package net.mcbay.transmat.fragments
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +17,8 @@ import net.mcbay.transmat.adapters.CalloutPageAdapter
 import net.mcbay.transmat.data.CalloutData
 import net.mcbay.transmat.data.CalloutDisplayType
 import net.mcbay.transmat.databinding.FragmentCalloutPageBinding
+import java.io.File
+
 
 class CalloutPageFragment : DataFragment() {
     private var fragBinding: FragmentCalloutPageBinding? = null
@@ -106,7 +110,38 @@ class CalloutPageFragment : DataFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_delete_callout_page -> {
-                deleteCalloutPage()
+                var calloutCount = 0
+
+                val dbJob = CoroutineScope(Dispatchers.IO).launch {
+                    val dao = TransmatApplication.INSTANCE.getDatabase().calloutPageDao()
+                    calloutCount = dao.getCalloutCount(pageId)
+                }
+
+                dbJob.invokeOnCompletion {
+                    // If callout page has defined callouts, confirm deletion with user
+                    if (calloutCount > 0) {
+                        activity?.runOnUiThread {
+                            AlertDialog.Builder(context)
+                                .setTitle(context?.getString(R.string.confirm_page_delete_title))
+                                .setMessage(
+                                    context?.resources?.getQuantityString(
+                                        R.plurals.confirm_page_delete, calloutCount, calloutCount
+                                    )
+                                )
+                                .setPositiveButton(context?.getString(R.string.ok)) { dialog, _ ->
+                                    dialog.dismiss()
+                                    deleteCalloutPage()
+                                }
+                                .setNegativeButton(
+                                    context?.getString(R.string.cancel)) { dialog, _ ->
+                                    dialog.dismiss()
+                                }
+                                .create().show()
+                        }
+                    } else {
+                        deleteCalloutPage()
+                    }
+                }
                 true
             }
             R.id.action_add_callout -> {
@@ -128,7 +163,7 @@ class CalloutPageFragment : DataFragment() {
             val database = TransmatApplication.INSTANCE.getDatabase()
             val nextDisplayOrder = (database.calloutDataDao().getMaxDisplayOrder(pageId) ?: 0L) + 1
             val label = context?.getString(R.string.callout_template, nextDisplayOrder) ?: ""
-            val color = context?.getColor(R.color.tm_primary) ?: 0
+            val color = context?.let { ContextCompat.getColor(it, R.color.tm_primary) } ?: 0
 
             val data = CalloutData(
                 pageId = pageId,
@@ -150,7 +185,20 @@ class CalloutPageFragment : DataFragment() {
     private fun deleteCalloutPage() {
         if (pageId != TransmatApplication.DEFAULT_PAGE_ID) {
             val dbJob = CoroutineScope(Dispatchers.IO).launch {
-                TransmatApplication.INSTANCE.getDatabase().calloutPageDao().delete(pageId)
+                val dao = TransmatApplication.INSTANCE.getDatabase().calloutPageDao()
+                val existingBitmapDatas = dao.getCalloutsOfType(pageId, CalloutDisplayType.BITMAP)
+
+                for (existingBitmapData in existingBitmapDatas) {
+                    // If existing callout icon is a bitmap, delete the local file prior to
+                    // deleting the database reference to this callout
+                    val file = File(existingBitmapData.data.toString())
+
+                    if (file.exists()) {
+                        file.delete()
+                    }
+                }
+
+                dao.delete(pageId)
             }
 
             dbJob.invokeOnCompletion {

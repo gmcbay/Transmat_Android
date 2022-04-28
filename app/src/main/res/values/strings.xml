@@ -16,7 +16,12 @@
     <string name="color">Color</string>
     <string name="image_photo">Image/Photo</string>
     <string name="built_in">Built-In</string>
-
+    <string name="confirm_page_delete_title">Delete Callout Page</string>
+    <plurals name="confirm_page_delete">
+        <item quantity="one">Are you sure you want to delete this page with %d callout?</item>
+        <item quantity="other">Are you sure you want to delete this page with %d callouts?</item>
+    </plurals>
+    <string name="ok">OK</string>
     <string name="choose_color">Choose Color</string>
     <string name="choose">Choose</string>
     <string name="cancel">Cancel</string>

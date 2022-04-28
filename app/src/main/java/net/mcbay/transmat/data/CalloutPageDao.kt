@@ -9,6 +9,12 @@ interface CalloutPageDao {
     @Query("SELECT * FROM calloutpage ORDER BY id ASC")
     suspend fun getAll(): List<CalloutPage>
 
+    @Query("SELECT COUNT(*) FROM calloutdata WHERE pageId = :pageId ORDER BY id ASC")
+    suspend fun getCalloutCount(pageId: Long): Int
+
+    @Query("SELECT * FROM calloutdata WHERE type = :type AND pageId = :pageId ORDER BY id ASC")
+    suspend fun getCalloutsOfType(pageId: Long, type: CalloutDisplayType): List<CalloutData>
+
     @Query("SELECT name FROM calloutpage WHERE id = :pageId")
     suspend fun getName(pageId: Long): String
 

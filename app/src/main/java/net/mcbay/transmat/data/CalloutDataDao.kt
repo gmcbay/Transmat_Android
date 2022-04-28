@@ -3,11 +3,15 @@ package net.mcbay.transmat.data
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface CalloutDataDao {
     @Query("SELECT * FROM calloutdata WHERE pageId = :pageId  ORDER BY id ASC")
     suspend fun getPage(pageId: Long): List<CalloutData>
+
+    @Update
+    suspend fun update(calloutData: CalloutData)
 
     @Query("SELECT * FROM calloutdata WHERE id = :calloutId  ORDER BY id ASC")
     suspend fun get(calloutId: Long): CalloutData?
