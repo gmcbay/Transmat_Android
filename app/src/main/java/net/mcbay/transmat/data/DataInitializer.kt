@@ -34,7 +34,7 @@ object DataInitializer {
                         label = ctx.getString(R.string.next),
                         callout = ctx.getString(R.string.next_separator),
                         type = CalloutDisplayType.DRAWABLE,
-                        data = ctx.resources.getResourceName(R.drawable.next)
+                        data = ctx.resources.getResourceName(R.drawable.redacted)
                     )
                 )
 
@@ -196,17 +196,6 @@ object DataInitializer {
                     CalloutData(
                         pageId = id,
                         displayOrder = displayOrder++,
-                        label = ctx.getString(R.string.knowledge),
-                        callout = ctx.getString(R.string.knowledge),
-                        type = CalloutDisplayType.DRAWABLE,
-                        data = ctx.resources.getResourceName(R.drawable.knowledge)
-                    )
-                )
-
-                dataDao.insertData(
-                    CalloutData(
-                        pageId = id,
-                        displayOrder = displayOrder++,
                         label = ctx.getString(R.string.light),
                         callout = ctx.getString(R.string.light),
                         type = CalloutDisplayType.DRAWABLE,
@@ -233,6 +222,17 @@ object DataInitializer {
                         callout = ctx.getString(R.string.pyramid),
                         type = CalloutDisplayType.DRAWABLE,
                         data = ctx.resources.getResourceName(R.drawable.pyramid)
+                    )
+                )
+
+                dataDao.insertData(
+                    CalloutData(
+                        pageId = id,
+                        displayOrder = displayOrder++,
+                        label = ctx.getString(R.string.remember),
+                        callout = ctx.getString(R.string.remember),
+                        type = CalloutDisplayType.DRAWABLE,
+                        data = ctx.resources.getResourceName(R.drawable.remember)
                     )
                 )
 
@@ -334,7 +334,7 @@ object DataInitializer {
 
     fun getBuiltinList(ctx: Context): Array<String> {
         return arrayOf(
-            ctx.resources.getResourceName(R.drawable.next),
+            ctx.resources.getResourceName(R.drawable.redacted),
             ctx.resources.getResourceName(R.drawable.ascendant_plane),
             ctx.resources.getResourceName(R.drawable.black_garden),
             ctx.resources.getResourceName(R.drawable.black_heart),
@@ -349,10 +349,10 @@ object DataInitializer {
             ctx.resources.getResourceName(R.drawable.guardian),
             ctx.resources.getResourceName(R.drawable.hive),
             ctx.resources.getResourceName(R.drawable.kill),
-            ctx.resources.getResourceName(R.drawable.knowledge),
             ctx.resources.getResourceName(R.drawable.light),
             ctx.resources.getResourceName(R.drawable.love),
             ctx.resources.getResourceName(R.drawable.pyramid),
+            ctx.resources.getResourceName(R.drawable.remember),
             ctx.resources.getResourceName(R.drawable.savathun),
             ctx.resources.getResourceName(R.drawable.scorn),
             ctx.resources.getResourceName(R.drawable.stop),
