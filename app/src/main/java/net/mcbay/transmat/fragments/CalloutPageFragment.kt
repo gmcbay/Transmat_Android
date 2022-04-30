@@ -4,8 +4,8 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,11 +24,12 @@ class CalloutPageFragment : DataFragment() {
     private var fragBinding: FragmentCalloutPageBinding? = null
     private val binding get() = fragBinding!!
     private var pageId = TransmatApplication.DEFAULT_PAGE_ID
+    private val args: CalloutPageFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        pageId = arguments?.getLong("calloutPageId") ?: TransmatApplication.DEFAULT_PAGE_ID
+        pageId = args.calloutPageId
     }
 
     override fun onCreateView(
@@ -44,7 +45,7 @@ class CalloutPageFragment : DataFragment() {
         initEditText(binding.pageName) {
             val pageName = binding.pageName.text.toString()
 
-            if (previousPageName != pageName) {
+            if (pageName != previousPageName) {
                 val dbJob = CoroutineScope(Dispatchers.IO).launch {
                     TransmatApplication.INSTANCE.getDatabase().calloutPageDao().setName(
                         pageId,
@@ -84,13 +85,12 @@ class CalloutPageFragment : DataFragment() {
                         list.adapter = calloutPageAdapter
                         calloutPageAdapter.setClickListener(object : AdapterClickListener {
                             override fun onItemClick(view: View?, position: Int) {
-                                val args = bundleOf(
-                                    "calloutId" to calloutPageAdapter.getCallout(
-                                        position
-                                    ).id
+                                findNavController().navigate(
+                                    R.id.to_CalloutEditFragment,
+                                    CalloutEditFragmentArgs(
+                                        calloutPageAdapter.getCallout(position).id ?: 0L
+                                    ).toBundle()
                                 )
-
-                                findNavController().navigate(R.id.to_CalloutEditFragment, args)
                             }
                         })
 
@@ -133,7 +133,8 @@ class CalloutPageFragment : DataFragment() {
                                     deleteCalloutPage()
                                 }
                                 .setNegativeButton(
-                                    context?.getString(R.string.cancel)) { dialog, _ ->
+                                    context?.getString(R.string.cancel)
+                                ) { dialog, _ ->
                                     dialog.dismiss()
                                 }
                                 .create().show()
@@ -185,7 +186,8 @@ class CalloutPageFragment : DataFragment() {
     private fun deleteCalloutPage() {
         if (pageId != TransmatApplication.DEFAULT_PAGE_ID) {
             val dbJob = CoroutineScope(Dispatchers.IO).launch {
-                val dao = TransmatApplication.INSTANCE.getDatabase().calloutPageDao()
+                val app = TransmatApplication.INSTANCE
+                val dao = app.getDatabase().calloutPageDao()
                 val existingBitmapDatas = dao.getCalloutsOfType(pageId, CalloutDisplayType.BITMAP)
 
                 for (existingBitmapData in existingBitmapDatas) {
@@ -198,7 +200,16 @@ class CalloutPageFragment : DataFragment() {
                     }
                 }
 
+                app.getDatabase().calloutDataDao().deletePage(pageId)
                 dao.delete(pageId)
+
+                // If we are deleting the currently selected callout page go back to the default
+                // page selection (pageId 1 which can't be deleted)
+                val prefs = app.getPrefs()
+
+                if (prefs.getSelectedPageId() == pageId) {
+                    prefs.setSelectedPageId(TransmatApplication.DEFAULT_PAGE_ID)
+                }
             }
 
             dbJob.invokeOnCompletion {

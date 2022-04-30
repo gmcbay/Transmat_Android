@@ -141,7 +141,7 @@ class MainActivity : MultiPickerWrapperAppCompatActivity() {
         hideSystemUI()
     }
 
-    private fun hideSystemUI() {
+    fun hideSystemUI() {
         val windowInsetsController =
             ViewCompat.getWindowInsetsController(window.decorView) ?: return
         windowInsetsController.systemBarsBehavior =

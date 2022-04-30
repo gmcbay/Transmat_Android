@@ -58,15 +58,19 @@ class MainFragment : Fragment(), AdapterClickListener {
         fragBinding = FragmentMainBinding.inflate(inflater, container, false)
         (fragBinding as FragmentMainBinding).lifecycleOwner = this
         (fragBinding as FragmentMainBinding).viewModel = CalloutItemViewModel.getInstance()
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.calloutGrid.post {
-            updateView()
+        binding.root.addOnLayoutChangeListener { view: View,
+                                                 left: Int, top: Int, right: Int, bottom: Int,
+                                                 prevLeft: Int, prevTop: Int,
+                                                 prevRight: Int, prevBottom: Int ->
+            if (((prevRight - prevLeft) != view.width) ||
+                ((prevBottom - prevTop) != view.height)
+            ) {
+                updateView()
+            }
         }
+
+        return binding.root
     }
 
     private fun updateView() {
@@ -75,12 +79,14 @@ class MainFragment : Fragment(), AdapterClickListener {
         val viewHeight = binding.calloutGrid.height
 
         val dbJob = CoroutineScope(Dispatchers.IO).launch {
+            val pageId = TransmatApplication.INSTANCE.getPrefs().getSelectedPageId()
             data.addAll(
-                TransmatApplication.INSTANCE.getDatabase().calloutDataDao().getPage(1)
+                TransmatApplication.INSTANCE.getDatabase().calloutDataDao().getPage(pageId)
             )
         }
 
         dbJob.invokeOnCompletion {
+            println("gfm viewWidth: $viewWidth, viewHeight: $viewHeight, data.size: $data.size")
             // For the purposes of this app its best if all the callout buttons fit into the
             // given view space with no scrolling required, so make that happen
             val gridFitValues = findGridFit(

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import net.mcbay.transmat.TransmatApplication
 import net.mcbay.transmat.data.CalloutPage
 import net.mcbay.transmat.databinding.CalloutPagesItemBinding
 
@@ -38,6 +39,13 @@ class CalloutPagesAdapter internal constructor(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder.binding) {
             pageName.text = data[position].name
+            prefs = TransmatApplication.INSTANCE.getPrefs()
+            pageId = data[position].id
+            radioButton.setOnClickListener {
+                TransmatApplication.INSTANCE.getPrefs().setSelectedPageId(
+                    pageId ?: TransmatApplication.DEFAULT_PAGE_ID
+                )
+            }
         }
     }
 

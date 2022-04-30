@@ -6,11 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
+import net.mcbay.transmat.data.BuiltinData
 import net.mcbay.transmat.databinding.BuiltinItemBinding
 
 class BuiltinAdapter internal constructor(
     private val context: Context?,
-    private val data: Array<String>
+    private val data: Array<BuiltinData>
 ) :
     RecyclerView.Adapter<BuiltinAdapter.ViewHolder>() {
     private var clickListener: AdapterClickListener? = null
@@ -46,7 +47,7 @@ class BuiltinAdapter internal constructor(
                         AppCompatResources.getDrawable(
                             ctx,
                             ctx.resources.getIdentifier(
-                                data[position],
+                                data[position].drawableName,
                                 "drawable", ctx.packageName
                             )
                         )

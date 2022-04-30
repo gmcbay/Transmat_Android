@@ -13,8 +13,6 @@ import net.mcbay.transmat.data.CalloutDatabase
 import net.mcbay.transmat.data.CalloutDisplayType
 import net.mcbay.transmat.data.DataInitializer
 import java.io.File
-import java.lang.Exception
-import java.lang.NumberFormatException
 
 class TransmatApplication : Application() {
     companion object {
@@ -26,12 +24,15 @@ class TransmatApplication : Application() {
 
     private lateinit var bluetoothUtil: BluetoothUtil
     private lateinit var database: CalloutDatabase
+    private lateinit var prefs: TransmatPrefs
     private var currentActivity: AppCompatActivity? = null
 
     override fun onCreate() {
         super.onCreate()
 
         INSTANCE = this
+
+        prefs = TransmatPrefs(this)
 
         bluetoothUtil = BluetoothUtil()
 
@@ -57,6 +58,10 @@ class TransmatApplication : Application() {
 
     fun getDatabase(): CalloutDatabase {
         return database
+    }
+
+    fun getPrefs(): TransmatPrefs {
+        return prefs
     }
 }
 

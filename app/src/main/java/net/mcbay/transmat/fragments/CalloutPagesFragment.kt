@@ -2,7 +2,6 @@ package net.mcbay.transmat.fragments
 
 import android.os.Bundle
 import android.view.*
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.CoroutineScope
@@ -53,13 +52,12 @@ class CalloutPagesFragment : DataFragment() {
                         list.adapter = calloutPagesAdapter
                         calloutPagesAdapter?.setClickListener(object : AdapterClickListener {
                             override fun onItemClick(view: View?, position: Int) {
-                                val args = bundleOf(
-                                    "calloutPageId" to calloutPagesAdapter?.getCalloutPage(
-                                        position
-                                    )?.id
+                                findNavController().navigate(
+                                    R.id.to_CalloutPageFragment, CalloutPageFragmentArgs(
+                                        calloutPagesAdapter?.getCalloutPage(position)?.id
+                                            ?: TransmatApplication.DEFAULT_PAGE_ID
+                                    ).toBundle()
                                 )
-
-                                findNavController().navigate(R.id.to_CalloutPageFragment, args)
                             }
                         })
 

@@ -18,6 +18,11 @@ open class DataFragment : Fragment() {
         (TransmatApplication.INSTANCE.getCurrentActivity() as MainActivity).onDatabaseUpdate()
     }
 
+    override fun onResume() {
+        super.onResume()
+        (TransmatApplication.INSTANCE.getCurrentActivity() as MainActivity).hideSystemUI()
+    }
+
     fun initEditText(editText: EditText, onComplete: () -> Unit) {
         editText.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, _ ->
             when (actionId) {
@@ -27,6 +32,7 @@ open class DataFragment : Fragment() {
                     val imm: InputMethodManager = v.context
                         .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(v.windowToken, 0)
+                    (activity as MainActivity).hideSystemUI()
                     onComplete()
                     return@OnEditorActionListener true
                 }

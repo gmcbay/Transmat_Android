@@ -9,10 +9,10 @@ import android.widget.Button
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.larswerkman.holocolorpicker.ColorPicker
-import com.larswerkman.holocolorpicker.SaturationBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,11 +32,12 @@ class CalloutEditFragment : DataFragment() {
     private var fragBinding: FragmentCalloutEditBinding? = null
     private val binding get() = fragBinding!!
     private var calloutId = -1L
+    private val args: CalloutEditFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        calloutId = arguments?.getLong("calloutId") ?: -1L
+        calloutId = args.calloutId
     }
 
     override fun onCreateView(
@@ -54,7 +55,7 @@ class CalloutEditFragment : DataFragment() {
             initEditText(calloutLabel) {
                 val label = calloutLabel.text.toString()
 
-                if (previousLabel?.equals(label) == true) {
+                if (label != previousLabel) {
                     val dbJob = CoroutineScope(Dispatchers.IO).launch {
                         TransmatApplication.INSTANCE.getDatabase().calloutDataDao().setLabel(
                             calloutId, label
@@ -71,7 +72,7 @@ class CalloutEditFragment : DataFragment() {
             initEditText(calloutMade) {
                 val callout = calloutMade.text.toString()
 
-                if (previousCallout != callout) {
+                if (callout != previousCallout) {
                     val dbJob = CoroutineScope(Dispatchers.IO).launch {
                         TransmatApplication.INSTANCE.getDatabase().calloutDataDao().setCallout(
                             calloutId, callout
@@ -133,9 +134,8 @@ class CalloutEditFragment : DataFragment() {
     private fun setDataType(calloutId: Long, type: CalloutDisplayType, data: String) {
         val dbSetDataJob = CoroutineScope(Dispatchers.IO).launch {
             val dao = TransmatApplication.INSTANCE.getDatabase().calloutDataDao()
-            val existingData = dao.get(calloutId)
 
-            existingData?.let {
+            dao.get(calloutId)?.let { existingData ->
                 // If existing callout icon is a bitmap, delete the local file prior to
                 // replacing the database reference to it
                 if (existingData.type == CalloutDisplayType.BITMAP) {
@@ -148,7 +148,6 @@ class CalloutEditFragment : DataFragment() {
 
                 existingData.type = type
                 existingData.data = data
-
                 dao.update(existingData)
             }
         }
@@ -177,7 +176,10 @@ class CalloutEditFragment : DataFragment() {
         adapter.setClickListener(object : AdapterClickListener {
             override fun onItemClick(view: View?, position: Int) {
                 popupWindow.dismiss()
-                setDataType(calloutId, CalloutDisplayType.DRAWABLE, builtinList[position])
+                setDataType(
+                    calloutId, CalloutDisplayType.DRAWABLE,
+                    builtinList[position].drawableName
+                )
             }
         })
 
@@ -210,10 +212,7 @@ class CalloutEditFragment : DataFragment() {
         builder.setCancelable(false)
 
         val picker = view.findViewById<ColorPicker>(R.id.picker)
-        val saturationBar = view.findViewById<SaturationBar>(
-            R.id.saturation_bar
-        )
-        picker.addSaturationBar(saturationBar)
+        picker.addSaturationBar(view.findViewById(R.id.saturation_bar))
         picker.setNewCenterColor(currentColor)
         picker.color = currentColor
         picker.showOldCenterColor = false
@@ -254,9 +253,8 @@ class CalloutEditFragment : DataFragment() {
         if (calloutId != -1L) {
             val dbJob = CoroutineScope(Dispatchers.IO).launch {
                 val dao = TransmatApplication.INSTANCE.getDatabase().calloutDataDao()
-                val existingData = dao.get(calloutId)
 
-                existingData?.let {
+                dao.get(calloutId)?.let { existingData ->
                     // If existing callout icon is a bitmap, delete the local file prior to
                     // deleting the database reference to this callout
                     if (existingData.type == CalloutDisplayType.BITMAP) {

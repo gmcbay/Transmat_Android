@@ -3,6 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="prefs"
+            type="net.mcbay.transmat.TransmatPrefs" />
+
+        <variable
+            name="pageId"
+            type="Long" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,6 +31,7 @@
             android:layout_margin="@dimen/callout_page_radio_button_margin"
             android:button="@null"
             android:buttonTint="@color/tm_primary_light"
+            android:checked="@{prefs.selectedPageId == pageId}"
             android:drawableRight="?android:attr/listChoiceIndicatorSingle"
             android:drawableTint="@color/tm_primary_light"
             android:paddingLeft="0dp"

@@ -11,5 +11,5 @@ data class CalloutData(
     var label: String?,
     var callout: String?,
     var type: CalloutDisplayType,
-    var data: String? // Used for Uri for bitmaps/color value for colors/drawable name for drawables
+    var data: String? // filename for bitmaps/color value for colors/drawable name for drawables
 )
