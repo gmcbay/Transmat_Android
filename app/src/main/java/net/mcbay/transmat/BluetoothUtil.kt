@@ -22,9 +22,8 @@ class BluetoothUtil {
     var onDisconnected: () -> Unit = {}
 
     private var stopScan: () -> Unit = {}
-
-    var connectedDevice: BluetoothGatt? = null
-    var uartTx: BluetoothGattCharacteristic? = null
+    private var connectedDevice: BluetoothGatt? = null
+    private var uartTx: BluetoothGattCharacteristic? = null
 
     var scanTimeoutRunnable = Runnable {
         onScanTimeout()
@@ -34,6 +33,9 @@ class BluetoothUtil {
 
     companion object {
         const val BLUETOOTH_SCAN_REQUEST = 1
+        // UUIDs used for UART service and the TX Characteristic on
+        // Adafruit Bluefruit LE devices, as defined here:
+        // https://learn.adafruit.com/introducing-adafruit-ble-bluetooth-low-energy-friend/uart-service
         val UART_UUID: ParcelUuid =
             ParcelUuid.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e")
         val TX_UUID: UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e")

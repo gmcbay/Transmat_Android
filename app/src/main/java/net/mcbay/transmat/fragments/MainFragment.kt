@@ -22,6 +22,9 @@ import net.mcbay.transmat.data.CalloutData
 import net.mcbay.transmat.databinding.FragmentMainBinding
 import kotlin.math.ceil
 
+// Main UI Fragment of the app, shows the currently selected page of callouts
+// in a RecyclerView using a grid size that changes dynamically to keep all callout
+// buttons visible while attempting to maximize their size
 class MainFragment : Fragment(), AdapterClickListener {
     private var fragBinding: FragmentMainBinding? = null
     private val binding get() = fragBinding!!
@@ -86,7 +89,6 @@ class MainFragment : Fragment(), AdapterClickListener {
         }
 
         dbJob.invokeOnCompletion {
-            println("gfm viewWidth: $viewWidth, viewHeight: $viewHeight, data.size: $data.size")
             // For the purposes of this app its best if all the callout buttons fit into the
             // given view space with no scrolling required, so make that happen
             val gridFitValues = findGridFit(

@@ -5,6 +5,8 @@ import android.content.Context
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 
+// Stored app preferences.  For now just stores an index to the currently active callout page
+// (referenced by table id in the database)
 class TransmatPrefs(private val ctx: Context) : BaseObservable() {
     companion object {
         const val PREFS_NAME = "TRANSMAT_PREFS"

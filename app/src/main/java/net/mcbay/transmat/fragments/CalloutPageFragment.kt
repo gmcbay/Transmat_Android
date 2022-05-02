@@ -19,7 +19,8 @@ import net.mcbay.transmat.data.CalloutDisplayType
 import net.mcbay.transmat.databinding.FragmentCalloutPageBinding
 import java.io.File
 
-
+// Fragment for editing a specific callout page, user can rename the page, delete the page,
+// or add new callouts to the page
 class CalloutPageFragment : DataFragment() {
     private var fragBinding: FragmentCalloutPageBinding? = null
     private val binding get() = fragBinding!!

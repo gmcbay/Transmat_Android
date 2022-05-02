@@ -28,7 +28,6 @@ import com.yalantis.ucrop.UCrop
 import net.mcbay.transmat.databinding.ActivityMainBinding
 import net.mcbay.transmat.fragments.DataFragment
 
-
 class MainActivity : MultiPickerWrapperAppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding

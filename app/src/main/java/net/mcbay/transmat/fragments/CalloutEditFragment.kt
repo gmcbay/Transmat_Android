@@ -28,6 +28,9 @@ import net.mcbay.transmat.databinding.FragmentCalloutEditBinding
 import net.mcbay.transmat.drawFrom
 import java.io.File
 
+// Fragment for editing an individual callout. User can name the callout, set the data
+// sent when making the callout and change the icon displayed for the callout (using a solid color,
+// a bitmap image on the local Android device, or one of the built-in Vow of the Disciple symbols).
 class CalloutEditFragment : DataFragment() {
     private var fragBinding: FragmentCalloutEditBinding? = null
     private val binding get() = fragBinding!!

@@ -14,6 +14,8 @@ import net.mcbay.transmat.adapters.CalloutPagesAdapter
 import net.mcbay.transmat.data.CalloutPage
 import net.mcbay.transmat.databinding.FragmentCalloutPagesBinding
 
+// Fragment for editing the list of callout pages, allowing user to add new pages or select
+// an existing page to edit
 class CalloutPagesFragment : DataFragment() {
     private var fragBinding: FragmentCalloutPagesBinding? = null
     private val binding get() = fragBinding!!
